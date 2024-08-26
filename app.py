@@ -10,9 +10,12 @@ class GroceryTracker:
     def __init__(self) -> None:
         self.window: ctk.CTk = ctk.CTk()
         self.window.title('Grocery Tracker')
-        self.window.geometry('320x290')
+        self.window.geometry('520x290')
         self.window.resizable(False, False)
         self.padding: dict = {'padx': 20, 'pady': 10}
+        self.calculation_placeholder: ctk.StringVar = ctk.StringVar()
+        self.calculation_placeholder.set('0')
+        self.calculation_placeholder_value: int = 0
 
         self.store_label: ctk.CTkLabel = ctk.CTkLabel(self.window, text='Store:')
         self.store_label.grid(row=0, column=0, **self.padding)
@@ -47,15 +50,27 @@ class GroceryTracker:
         self.price_per_item_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
         self.price_per_item_entry.grid(row=4, column=1, **self.padding)
 
+        self.total_item_price_label: ctk.CTkLabel = ctk.CTkLabel(
+            self.window, text='Total Item Price'
+        )
+        self.total_item_price_label.grid(row=0, column=2, **self.padding)
+
+        self.total_item_price_calculation_label: ctk.CTkLabel = ctk.CTkLabel(
+            self.window, textvariable=self.calculation_placeholder
+        )
+        self.total_item_price_calculation_label.grid(row=1, column=2, **self.padding)
+        self.total_item_price_calculation_label.grid_anchor('e')
+
         self.add_button = ctk.CTkButton(
             self.window, text='Add', command=self.on_add_button_click
         )
-        self.add_button.grid(row=5, column=0, columnspan=2, **self.padding)
+        self.add_button.grid(row=5, column=2, **self.padding)
 
     def on_add_button_click(self) -> None:
         """This function will perform an action upon being clicked."""
 
-        raise NotImplementedError
+        self.calculation_placeholder_value += 10
+        self.calculation_placeholder.set(self.calculation_placeholder_value)
 
     def run(self) -> None:
         """This function shows the application window."""
