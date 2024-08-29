@@ -3,6 +3,7 @@
 # author: Gustavo Sopena
 # date started: 24-08-25 at 1000
 
+import csv
 import customtkinter as ctk
 
 
@@ -70,7 +71,7 @@ class GroceryTracker:
         self.add_button.grid(row=3, column=2, **self.padding)
 
         self.add_button = ctk.CTkButton(
-            self.window, text='Add', command=self.on_add_button_click
+            self.window, text='Add', command=self.add_data_to_csv
         )
         self.add_button.grid(row=4, column=2, **self.padding)
 
@@ -89,16 +90,39 @@ class GroceryTracker:
         # if item_weight_input == 0 and item_quantity_input == 1:
         #     total_item_price = price_per_qw_input
         if item_weight_input == 0:
-            total_item_price = item_quantity_input * price_per_qw_input
+            total_item_price = round(item_quantity_input * price_per_qw_input, 2)
         elif item_quantity_input == 1:
-            total_item_price = item_weight_input * price_per_qw_input
+            total_item_price = round(item_weight_input * price_per_qw_input, 2)
 
         self.calculation_placeholder.set(total_item_price)
 
-    def on_add_button_click(self) -> None:
-        """This function will perform an action upon being clicked."""
+    def add_data_to_csv(self) -> None:
+        """This function adds the contents of the input fields into the csv file."""
 
-        raise NotImplementedError
+        # step 1: get the contents of the store and item name fields and
+        #         check that they are not empty
+        # step 2: if these two fields are not empty, write the values obtained to the
+        #         csv file along with the other three numerical values and the total
+        #         item price
+        if (store_name_input := self.store_entry.get()) != '' and \
+           (item_name_input := self.item_name_entry.get()) != '':
+
+            with open('data.csv', mode='a', newline='') as csv_file:
+                writer = csv.writer(
+                    csv_file,
+                    delimiter=',',
+                    escapechar='\\',
+                    doublequote=False,
+                    quoting=csv.QUOTE_STRINGS
+                )
+                writer.writerow([
+                    store_name_input,
+                    item_name_input,
+                    int(self.item_quantity_entry.get()),
+                    float(self.item_weight_entry.get()),
+                    float(self.price_per_qw_entry.get()),
+                    float(self.calculation_placeholder.get())
+                ])
 
     def run(self) -> None:
         """This function shows the application window."""
