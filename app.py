@@ -13,7 +13,7 @@ class GroceryTracker:
         self.window.title('Grocery Tracker')
         self.window.geometry('560x240')
         self.window.resizable(False, False)
-        self.padding: dict = {'padx': 20, 'pady': 10}
+        self.padding: dict[str, int] = {'padx': 20, 'pady': 10}
         self.calculation_placeholder: ctk.StringVar = ctk.StringVar()
         self.calculation_placeholder.set('0')
         self.calculation_placeholder_value: int = 0
@@ -63,12 +63,11 @@ class GroceryTracker:
             self.window, textvariable=self.calculation_placeholder
         )
         self.total_item_price_calculation_label.grid(row=1, column=2, **self.padding)
-        self.total_item_price_calculation_label.grid_anchor('e')
 
-        self.add_button = ctk.CTkButton(
+        self.calculate_button = ctk.CTkButton(
             self.window, text='Calculate', command=self.calculate_total_item_price
         )
-        self.add_button.grid(row=3, column=2, **self.padding)
+        self.calculate_button.grid(row=3, column=2, **self.padding)
 
         self.add_button = ctk.CTkButton(
             self.window, text='Add', command=self.add_data_to_csv
