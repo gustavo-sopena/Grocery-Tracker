@@ -11,47 +11,52 @@ class GroceryTracker:
     def __init__(self) -> None:
         self.window: ctk.CTk = ctk.CTk()
         self.window.title('Grocery Tracker')
-        self.window.geometry('560x240')
+        self.window.geometry('560x290')
         self.window.resizable(False, False)
         self.padding: dict[str, int] = {'padx': 20, 'pady': 10}
         self.calculation_placeholder: ctk.StringVar = ctk.StringVar()
         self.calculation_placeholder.set('0')
         self.calculation_placeholder_value: int = 0
 
+        self.date_label: ctk.CTkLabel = ctk.CTkLabel(self.window, text='Date:')
+        self.date_label.grid(row=0, column=0, **self.padding)
+        self.date_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
+        self.date_entry.grid(row=0, column=1, **self.padding)
+
         self.store_label: ctk.CTkLabel = ctk.CTkLabel(self.window, text='Store:')
-        self.store_label.grid(row=0, column=0, **self.padding)
+        self.store_label.grid(row=1, column=0, **self.padding)
         self.store_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
-        self.store_entry.grid(row=0, column=1, **self.padding)
+        self.store_entry.grid(row=1, column=1, **self.padding)
 
         self.item_name_label: ctk.CTkLabel = ctk.CTkLabel(
             self.window, text='Item Name:'
         )
-        self.item_name_label.grid(row=1, column=0, **self.padding)
+        self.item_name_label.grid(row=2, column=0, **self.padding)
         self.item_name_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
-        self.item_name_entry.grid(row=1, column=1, **self.padding)
+        self.item_name_entry.grid(row=2, column=1, **self.padding)
 
         self.item_quantity_label: ctk.CTkLabel = ctk.CTkLabel(
             self.window, text='Item Quantity:'
         )
-        self.item_quantity_label.grid(row=2, column=0, **self.padding)
+        self.item_quantity_label.grid(row=3, column=0, **self.padding)
         self.item_quantity_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
-        self.item_quantity_entry.grid(row=2, column=1, **self.padding)
+        self.item_quantity_entry.grid(row=3, column=1, **self.padding)
         self.item_quantity_entry.insert(0, '1')
 
         self.item_weight_label: ctk.CTkLabel = ctk.CTkLabel(
             self.window, text='Item Weight:'
         )
-        self.item_weight_label.grid(row=3, column=0, **self.padding)
+        self.item_weight_label.grid(row=4, column=0, **self.padding)
         self.item_weight_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
-        self.item_weight_entry.grid(row=3, column=1, **self.padding)
+        self.item_weight_entry.grid(row=4, column=1, **self.padding)
         self.item_weight_entry.insert(0, '0')
 
         self.price_per_qw_label: ctk.CTkLabel = ctk.CTkLabel(
             self.window, text='Price Per Quantity/Weight:'
         )
-        self.price_per_qw_label.grid(row=4, column=0, **self.padding)
+        self.price_per_qw_label.grid(row=5, column=0, **self.padding)
         self.price_per_qw_entry: ctk.CTkEntry = ctk.CTkEntry(self.window)
-        self.price_per_qw_entry.grid(row=4, column=1, **self.padding)
+        self.price_per_qw_entry.grid(row=5, column=1, **self.padding)
         self.price_per_qw_entry.insert(0, '0')
 
         self.total_item_price_label: ctk.CTkLabel = ctk.CTkLabel(
@@ -67,12 +72,12 @@ class GroceryTracker:
         self.calculate_button = ctk.CTkButton(
             self.window, text='Calculate', command=self.calculate_total_item_price
         )
-        self.calculate_button.grid(row=3, column=2, **self.padding)
+        self.calculate_button.grid(row=4, column=2, **self.padding)
 
         self.add_button = ctk.CTkButton(
             self.window, text='Add', command=self.add_data_to_csv
         )
-        self.add_button.grid(row=4, column=2, **self.padding)
+        self.add_button.grid(row=5, column=2, **self.padding)
 
     def calculate_total_item_price(self) -> None:
         """
@@ -104,8 +109,8 @@ class GroceryTracker:
         #         csv file along with the other three numerical values and the total
         #         item price
         if (store_name_input := self.store_entry.get()) != '' and \
-           (item_name_input := self.item_name_entry.get()) != '':
-
+           (item_name_input := self.item_name_entry.get()) != '' and \
+           (date_input := self.date_entry.get()) != '':
             with open('data.csv', mode='a', newline='') as csv_file:
                 writer = csv.writer(
                     csv_file,
@@ -115,6 +120,7 @@ class GroceryTracker:
                     quoting=csv.QUOTE_STRINGS
                 )
                 writer.writerow([
+                    date_input,
                     store_name_input,
                     item_name_input,
                     int(self.item_quantity_entry.get()),
